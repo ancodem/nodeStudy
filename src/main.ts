@@ -1,12 +1,11 @@
-import express from "express";
 import { App } from "./app";
-import userRouter from "./users/routes";
+import { Logger } from "./services/logger.service";
+import { userController } from "./users/routes";
 
 async function bootstrap() {
-  const app: App = new App(8080);
-  app.addRouteHandlers({
-    "/users": userRouter,
-  });
+  const app: App = new App({ port: 8080, logger: Logger });
+  app.addRoutes([userController]);
+
   await app.init();
 }
 

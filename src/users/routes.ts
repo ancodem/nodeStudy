@@ -21,8 +21,8 @@ export const userController = new UsersController({
     },
     {
       path: "/login",
-      handler: (_req: Request, _res: Response, _next: NextFunction) => {
-        throw new Error("низя взять то, что не положил");
+      handler: (_req: Request, _res: Response, next: NextFunction) => {
+        next(new Error("низя взять то, что не положил"));
       },
       method: "get",
     },

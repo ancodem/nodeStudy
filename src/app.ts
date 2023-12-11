@@ -1,6 +1,7 @@
-import express, { Express, Router } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import { Server } from "http";
 import { BaseController } from "./controllers/base.controller";
+import { HTTPError } from "./services/error.service";
 import { LoggerService } from "./services/logger.service";
 
 export class App {
@@ -22,12 +23,19 @@ export class App {
   }
 
   public addRoutes(routes: BaseController[]) {
-    for (let i = 0; i< routes.length; i++ ) {
+    for (let i = 0; i < routes.length; i++) {
       this.app.use(routes[i].router);
     }
   }
 
-  public addMiddleWare(middleWare: Router | Router[]) {
-    this.app.use(middleWare);
+  public addErrorHandlers(
+    handlers: ((
+      err: Error | HTTPError,
+      req: Request,
+      res: Response,
+      next: NextFunction,
+    ) => void)[],
+  ) {
+    this.app.use(handlers);
   }
 }

@@ -4,7 +4,7 @@ import { LoggerService } from "../services/logger.service";
 
 export abstract class BaseController {
   private _router: Router;
-  private logger: LoggerService;
+  protected logger: LoggerService;
 
   constructor({ logger }: { logger: LoggerService }) {
     this._router = Router();

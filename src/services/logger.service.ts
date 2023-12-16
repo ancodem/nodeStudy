@@ -1,23 +1,25 @@
-import { Logger as TsLogger } from "tslog";
+import { injectable } from 'inversify';
+import { Logger as TsLogger } from 'tslog';
+import { ILogger } from '../interfaces/logger';
+import 'reflect-metadata';
 
-export class LoggerService {
-  public logger: TsLogger<unknown>;
+@injectable()
+export class LoggerService implements ILogger {
+	public logger: TsLogger<unknown>;
 
-  constructor(logger: TsLogger<unknown>) {
-    this.logger = logger;
-  }
+	constructor() {
+		this.logger = new TsLogger();
+	}
 
-  log(...args: unknown[]) {
-    this.logger.info(...args);
-  }
+	log(...args: unknown[]): void {
+		this.logger.info(...args);
+	}
 
-  error(...args: unknown[]) {
-    this.logger.error(...args);
-  }
+	error(...args: unknown[]): void {
+		this.logger.error(...args);
+	}
 
-  wart(...args: unknown[]) {
-    this.logger.warn(...args);
-  }
+	wart(...args: unknown[]): void {
+		this.logger.warn(...args);
+	}
 }
-
-export const Logger = new LoggerService(new TsLogger());

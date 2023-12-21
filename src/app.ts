@@ -8,6 +8,7 @@ import { HTTPError } from './services/error.service';
 import { TYPES } from './types';
 import 'reflect-metadata';
 import { IErrorHandler } from './interfaces/errorHandler';
+import { json } from 'body-parser';
 
 @injectable()
 export class App {
@@ -27,10 +28,15 @@ export class App {
 	}
 
 	public async init(): Promise<void> {
+		this.addBodyParser();
 		this.addRoutes([this.userController]);
 		this.addErrorHandlers([this.errorHandler.catch]);
 		this.server = this.app.listen(this.port);
 		this.logger.log(`Сервер запущен на http://.localhost:${this.port}`);
+	}
+
+	public addBodyParser(): void {
+		this.app.use(json());
 	}
 
 	public addRoutes(routes: BaseController[]): void {

@@ -7,26 +7,29 @@ import { ErrorHandler } from './services/error.service';
 import { LoggerService } from './services/logger.service';
 import { TYPES } from './types';
 import { UsersController } from './users/users.controller';
+import { IUserService } from './services/user.service.interface';
+import { UserService } from './services/user.service';
 
 interface IBootstrapReturn {
-	app: App;
-	appContainer: Container;
+  app: App;
+  appContainer: Container;
 }
 
 const appModules = new ContainerModule((bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService);
-	bind<IErrorHandler>(TYPES.ErrorHandler).to(ErrorHandler);
-	bind<IUserController>(TYPES.UserController).to(UsersController);
-	bind<App>(TYPES.Application).to(App);
+  bind<ILogger>(TYPES.ILogger).to(LoggerService);
+  bind<IErrorHandler>(TYPES.ErrorHandler).to(ErrorHandler);
+  bind<IUserController>(TYPES.UserController).to(UsersController);
+  bind<IUserService>(TYPES.UserService).to(UserService);
+  bind<App>(TYPES.Application).to(App);
 });
 
 function bootstrap(): IBootstrapReturn {
-	const appContainer = new Container();
-	appContainer.load(appModules);
-	const app = appContainer.get<App>(TYPES.Application);
+  const appContainer = new Container();
+  appContainer.load(appModules);
+  const app = appContainer.get<App>(TYPES.Application);
 
-	app.init();
-	return { app, appContainer };
+  app.init();
+  return { app, appContainer };
 }
 
 export const { app, appContainer } = bootstrap();

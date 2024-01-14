@@ -2,26 +2,26 @@
 import { hash } from 'bcryptjs';
 
 export class User {
-	private _password: string;
+  private _password: string;
 
-	constructor(
-		private readonly _name: string,
-		private readonly _email: string,
-	) {}
+  constructor(
+    private readonly _name: string,
+    private readonly _email: string,
+  ) {}
 
-	get name(): string {
-		return this._name;
-	}
+  get name(): string {
+    return this._name;
+  }
 
-	get email(): string {
-		return this._email;
-	}
+  get email(): string {
+    return this._email;
+  }
 
-	get password(): string {
-		return this._password;
-	}
+  get password(): string {
+    return this._password;
+  }
 
-	async setPassword(pass: string): Promise<void> {
-		this._password = await hash(pass, 10);
-	}
+  async setPassword(pass: string): Promise<void> {
+    this._password = await hash(pass, 10);
+  }
 }

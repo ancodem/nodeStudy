@@ -1,3 +1,4 @@
+// route handling logic
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { BaseController } from '../controllers/base.controller';
@@ -7,6 +8,7 @@ import 'reflect-metadata';
 import { IUserController } from '../interfaces/controller';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { User } from './entity/User';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
@@ -24,22 +26,25 @@ export class UsersController extends BaseController implements IUserController {
 	}
 
 	public login = (
-		req: Request<unknown, unknown, UserLoginDto>,
+		{ body }: Request<unknown, unknown, UserLoginDto>,
 		res: Response,
 		next: NextFunction,
 	): void => {
 		this.loggerService.log('Обработчик рута users');
-		console.info('req body', req.body);
-		res.status(200).send('вы успешно залогинились');
+		console.info('req body', body);
+		res.status(200).send(`вы успешно залогинились с данными ${JSON.stringify(body)}`);
 		next();
 	};
 
-	public register = (
-		_req: Request<unknown, unknown, UserRegisterDto>,
+	public register = async (
+		{ body }: Request<unknown, unknown, UserRegisterDto>,
 		res: Response,
 		next: NextFunction,
-	): void => {
-		res.status(200).send('вы успешно зарегистрировались');
+	): Promise<void> => {
+		const newUser = new User(body.login, body.email);
+
+		await newUser.setPassword(body.password);
+		res.status(200).send(newUser);
 		next();
 	};
 }

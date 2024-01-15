@@ -1,7 +1,7 @@
 // route handling logic
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
-import { BaseController } from '../controllers/base.controller';
+import { BaseController } from '../common/base.controller';
 import { ILogger } from '../interfaces/logger';
 import { TYPES } from '../types';
 import 'reflect-metadata';
@@ -10,6 +10,7 @@ import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserService } from '../services/user.service.interface';
 import { HTTPError } from '../services/error.service';
+import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable()
 export class UsersController extends BaseController implements IUserController {
@@ -23,7 +24,12 @@ export class UsersController extends BaseController implements IUserController {
     this.bindRoutes(
       [
         { path: '/login', method: 'post', handler: this.login },
-        { path: '/register', method: 'post', handler: this.register },
+        {
+          path: '/register',
+          method: 'post',
+          handler: this.register,
+          middlewares: [new ValidateMiddleware(UserRegisterDto)],
+        },
       ],
       this.basePath,
     );

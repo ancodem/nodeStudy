@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { IMiddleware } from '../controllers/middleware.interface';
+import { IMiddleware } from '../common/middleware.interface';
 
 type Handler<T = Request | Error> = T extends Error
   ? (err: T, req: Request, res: Response, next: NextFunction) => void

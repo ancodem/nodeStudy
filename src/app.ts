@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
 import { inject, injectable } from 'inversify';
-import { BaseController } from './controllers/base.controller';
+import { BaseController } from './common/base.controller';
 import { UsersController } from './users/users.controller';
 import { ILogger } from './interfaces/logger';
 import { HTTPError } from './services/error.service';

@@ -9,6 +9,7 @@ import { TYPES } from './types';
 import 'reflect-metadata';
 import { IErrorHandler } from './interfaces/errorHandler';
 import { json } from 'body-parser';
+import { PrismaService } from './database/prisma.service';
 
 @injectable()
 export class App {
@@ -22,6 +23,7 @@ export class App {
     @inject(TYPES.ILogger) logger: ILogger,
     @inject(TYPES.UserController) private userController: UserController,
     @inject(TYPES.ErrorHandler) private errorHandler: IErrorHandler,
+    @inject(TYPES.PrismaService) private database: PrismaService,
   ) {
     this.app = express();
     this.logger = logger;
@@ -31,6 +33,7 @@ export class App {
     this.addBodyParser();
     this.addRoutes([this.userController]);
     this.addErrorHandlers([this.errorHandler.catch]);
+    await this.database.connect();
     this.server = this.app.listen(this.port);
     this.logger.log(`Сервер запущен на http://.localhost:${this.port}`);
   }

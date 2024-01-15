@@ -13,7 +13,7 @@ import { HTTPError } from '../services/error.service';
 import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable()
-export class UsersController extends BaseController implements IUserController {
+export class UserController extends BaseController implements IUserController {
   private basePath = '/user';
 
   constructor(

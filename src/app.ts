@@ -2,7 +2,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import { Server } from 'http';
 import { inject, injectable } from 'inversify';
 import { BaseController } from './common/base.controller';
-import { UsersController } from './users/users.controller';
+import { UserController } from './users/users.controller';
 import { ILogger } from './interfaces/logger';
 import { HTTPError } from './services/error.service';
 import { TYPES } from './types';
@@ -20,7 +20,7 @@ export class App {
 
   constructor(
     @inject(TYPES.ILogger) logger: ILogger,
-    @inject(TYPES.UserController) private userController: UsersController,
+    @inject(TYPES.UserController) private userController: UserController,
     @inject(TYPES.ErrorHandler) private errorHandler: IErrorHandler,
   ) {
     this.app = express();

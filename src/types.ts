@@ -4,4 +4,5 @@ export const TYPES = {
   UserController: Symbol.for('UserController'),
   ErrorHandler: Symbol.for('ErrorHandler'),
   UserService: Symbol.for('UserService'),
+  ConfigService: Symbol.for('ConfigService'),
 };

@@ -6,9 +6,11 @@ import { ILogger } from './interfaces/logger';
 import { ErrorHandler } from './services/error.service';
 import { LoggerService } from './services/logger.service';
 import { TYPES } from './types';
-import { UsersController } from './users/users.controller';
+import { UserController } from './users/users.controller';
 import { IUserService } from './services/user.service.interface';
 import { UserService } from './services/user.service';
+import { IConfigService } from './config/config.service.interface';
+import { ConfigService } from './config/config.service';
 
 interface IBootstrapReturn {
   app: App;
@@ -16,9 +18,10 @@ interface IBootstrapReturn {
 }
 
 const appModules = new ContainerModule((bind) => {
-  bind<ILogger>(TYPES.ILogger).to(LoggerService);
+  bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope();
+  bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
   bind<IErrorHandler>(TYPES.ErrorHandler).to(ErrorHandler);
-  bind<IUserController>(TYPES.UserController).to(UsersController);
+  bind<IUserController>(TYPES.UserController).to(UserController);
   bind<IUserService>(TYPES.UserService).to(UserService);
   bind<App>(TYPES.Application).to(App);
 });

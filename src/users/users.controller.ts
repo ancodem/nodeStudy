@@ -8,7 +8,7 @@ import 'reflect-metadata';
 import { IUserController } from '../interfaces/controller';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
-import { IUserService } from '../services/user.service.interface';
+import { IUserService } from './services/user.service.interface';
 import { HTTPError } from '../services/error.service';
 import { ValidateMiddleware } from '../common/validate.middleware';
 

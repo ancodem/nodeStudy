@@ -1,13 +1,13 @@
 import { UserModel } from '@prisma/client';
-import { EnvKeyFor } from '../config/config.service';
-import { IConfigService } from '../config/config.service.interface';
-import { TYPES } from '../types';
-import { UserLoginDto } from '../users/dto/user-login.dto';
-import { UserRegisterDto } from '../users/dto/user-register.dto';
-import { User } from '../users/entity/User';
-import { IUserRepository } from '../users/repository/user.repository.interface';
 import { IUserService } from './user.service.interface';
 import { inject, injectable } from 'inversify';
+import { TYPES } from '../../types';
+import { IConfigService } from '../../config/config.service.interface';
+import { IUserRepository } from '../repository/user.repository.interface';
+import { UserRegisterDto } from '../dto/user-register.dto';
+import { User } from '../entity/User';
+import { EnvKeyFor } from '../../config/config.service';
+import { UserLoginDto } from '../dto/user-login.dto';
 
 @injectable()
 export class UserService implements IUserService {

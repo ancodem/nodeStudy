@@ -7,13 +7,13 @@ import { ErrorHandler } from './services/error.service';
 import { LoggerService } from './services/logger.service';
 import { TYPES } from './types';
 import { UserController } from './users/users.controller';
-import { IUserService } from './services/user.service.interface';
-import { UserService } from './services/user.service';
 import { IConfigService } from './config/config.service.interface';
 import { ConfigService } from './config/config.service';
 import { PrismaService } from './database/prisma.service';
 import { IUserRepository } from './users/repository/user.repository.interface';
 import { UserRepository } from './users/repository/user.repository';
+import { IUserService } from './users/services/user.service.interface';
+import { UserService } from './users/services/user.service';
 
 interface IBootstrapReturn {
   app: App;

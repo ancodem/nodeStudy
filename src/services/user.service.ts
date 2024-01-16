@@ -14,7 +14,7 @@ export class UserService implements IUserService {
   constructor(
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-  ) { }
+  ) {}
   async createUser({ name, email, password }: UserRegisterDto): Promise<UserModel | null> {
     const newcommer = new User(name, email);
     const salt = +this.configService.get(EnvKeyFor.SALT);
@@ -27,7 +27,12 @@ export class UserService implements IUserService {
     return this.userRepository.create(newcommer);
   }
 
-  async ensureIsValid(_dto: UserLoginDto): Promise<boolean> {
-    return true;
+  async ensureIsValid({ email, password }: UserLoginDto): Promise<boolean> {
+    const existingUser = await this.userRepository.find(email);
+    if (!existingUser) {
+      return false;
+    }
+
+    return User.validatePassword(password, existingUser.password);
   }
 }

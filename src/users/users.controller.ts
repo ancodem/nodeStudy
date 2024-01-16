@@ -23,7 +23,12 @@ export class UserController extends BaseController implements IUserController {
     super({ logger: loggerService });
     this.bindRoutes(
       [
-        { path: '/login', method: 'post', handler: this.login },
+        {
+          path: '/login',
+          method: 'post',
+          handler: this.login,
+          middlewares: [new ValidateMiddleware(UserLoginDto)],
+        },
         {
           path: '/register',
           method: 'post',
@@ -35,14 +40,21 @@ export class UserController extends BaseController implements IUserController {
     );
   }
 
-  public login = (
+  public login = async (
     { body }: Request<unknown, unknown, UserLoginDto>,
     res: Response,
     next: NextFunction,
-  ): void => {
-    this.loggerService.log('Обработчик рута users');
-    console.info('req body', body);
-    res.status(200).send(`вы успешно залогинились с данными ${JSON.stringify(body)}`);
+  ): Promise<void> => {
+    const isValid = await this.userService.ensureIsValid(body);
+
+    if (isValid) {
+      res.status(200).send(`вы успешно залогинились с данными ${JSON.stringify(body)}`);
+      this.loggerService.log('[user login] successful');
+    } else {
+      res.status(401).send(`неверный логин или пароль`);
+      this.loggerService.log('[user login] unsuccessful');
+    }
+
     next();
   };
 
@@ -52,9 +64,12 @@ export class UserController extends BaseController implements IUserController {
     next: NextFunction,
   ): Promise<void> => {
     const newcommer = await this.userService.createUser(body);
+
     if (!newcommer) {
+      this.loggerService.log(`[user register] unsuccessfull: User ${body.name} ${body.email}`);
       return next(new HTTPError({ status: 422, message: 'Похоже пользователь уже существует' }));
     }
+    this.loggerService.log(`[user register] successfull: User ${body.name} ${body.email}`);
     res.status(200).send(newcommer);
     next();
   };

@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { validate } from 'class-validator';
 
 export class ValidateMiddleware implements IMiddleware {
-  constructor(private classToValidate: ClassConstructor<object>) { }
+  constructor(private classToValidate: ClassConstructor<object>) {}
 
   execute({ body }: Request, resp: Response, next: NextFunction): void {
     const instance = plainToClass(this.classToValidate, body);

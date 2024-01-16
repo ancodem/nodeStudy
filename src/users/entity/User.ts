@@ -1,5 +1,5 @@
 // buisness entity that represents a business related item and that is separated from other logic
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 export class User {
   private _password: string;
@@ -23,5 +23,9 @@ export class User {
 
   async setPassword(pass: string, salt: number): Promise<void> {
     this._password = await hash(pass, salt);
+  }
+
+  static async validatePassword(provided: string, stored: string): Promise<boolean> {
+    return compare(provided, stored);
   }
 }

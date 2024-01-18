@@ -6,8 +6,8 @@ import { IConfigService } from '../../config/config.service.interface';
 import { IUserRepository } from '../repository/user.repository.interface';
 import { UserRegisterDto } from '../dto/user-register.dto';
 import { User } from '../entity/User';
-import { EnvKeyFor } from '../../config/config.service';
 import { UserLoginDto } from '../dto/user-login.dto';
+import { EnvKeyFor } from '../../constants/config';
 
 @injectable()
 export class UserService implements IUserService {

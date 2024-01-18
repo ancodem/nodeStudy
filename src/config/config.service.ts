@@ -3,12 +3,9 @@ import { IConfigService } from './config.service.interface';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { ILogger } from '../interfaces/logger';
+import { EnvKeyFor } from '../constants/config';
 
-export const EnvKeyFor = {
-  SALT: 'SALT',
-} as const;
-
-type EnvKey = (typeof EnvKeyFor)[keyof typeof EnvKeyFor];
+export type EnvKey = (typeof EnvKeyFor)[keyof typeof EnvKeyFor];
 
 @injectable()
 export class ConfigService implements IConfigService {

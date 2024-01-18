@@ -11,6 +11,9 @@ import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserService } from './services/user.service.interface';
 import { HTTPError } from '../services/error.service';
 import { ValidateMiddleware } from '../common/validate.middleware';
+import { sign } from 'jsonwebtoken';
+import { IConfigService } from '../config/config.service.interface';
+import { EnvKeyFor } from '../constants/config';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -19,6 +22,7 @@ export class UserController extends BaseController implements IUserController {
   constructor(
     @inject(TYPES.ILogger) private loggerService: ILogger,
     @inject(TYPES.UserService) private userService: IUserService,
+    @inject(TYPES.ConfigService) private configService: IConfigService,
   ) {
     super({ logger: loggerService });
     this.bindRoutes(
@@ -48,7 +52,8 @@ export class UserController extends BaseController implements IUserController {
     const isValid = await this.userService.ensureIsValid(body);
 
     if (isValid) {
-      res.status(200).send(`вы успешно залогинились с данными ${JSON.stringify(body)}`);
+      const jwt = await this.signJWT(body.email, this.configService.get(EnvKeyFor.SECRET));
+      res.status(200).send(`вы успешно залогинились ${jwt}`);
       this.loggerService.log('[user login] successful');
     } else {
       res.status(401).send(`неверный логин или пароль`);
@@ -69,8 +74,25 @@ export class UserController extends BaseController implements IUserController {
       this.loggerService.log(`[user register] unsuccessfull: User ${body.name} ${body.email}`);
       return next(new HTTPError({ status: 422, message: 'Похоже пользователь уже существует' }));
     }
-    this.loggerService.log(`[user register] successfull: User ${body.name} ${body.email}`);
+
     res.status(200).send(newcommer);
     next();
   };
+
+  private signJWT(email: string, secret: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      sign(
+        { email, iat: Math.floor(Date.now() - 1000) },
+        secret,
+        { algorithm: 'HS256' },
+        (error, token) => {
+          if (token) {
+            resolve(token);
+          }
+
+          reject(error);
+        },
+      );
+    });
+  }
 }

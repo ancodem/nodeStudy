@@ -15,4 +15,5 @@ export interface IRouteController {
 export interface IUserController {
   register(_req: Request, res: Response, next: NextFunction): void;
   login(_req: Request, res: Response, next: NextFunction): void;
+  info(_req: Request, res: Response, next: NextFunction): void;
 }

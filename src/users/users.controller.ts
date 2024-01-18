@@ -39,6 +39,11 @@ export class UserController extends BaseController implements IUserController {
           handler: this.register,
           middlewares: [new ValidateMiddleware(UserRegisterDto)],
         },
+        {
+          path: '/info',
+          method: 'get',
+          handler: this.info,
+        },
       ],
       this.basePath,
     );
@@ -76,6 +81,12 @@ export class UserController extends BaseController implements IUserController {
     }
 
     res.status(200).send(newcommer);
+    next();
+  };
+
+  public info = async ({ user }: Request, res: Response, next: NextFunction): Promise<void> => {
+    this.loggerService.log('[user info] should return email if worked');
+    res.status(200).send(`worked: ${user}`);
     next();
   };
 

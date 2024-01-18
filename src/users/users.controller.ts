@@ -14,6 +14,7 @@ import { ValidateMiddleware } from '../common/validate.middleware';
 import { sign } from 'jsonwebtoken';
 import { IConfigService } from '../config/config.service.interface';
 import { EnvKeyFor } from '../constants/config';
+import { GuardMiddleware } from '../common/guard.middleware';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -43,6 +44,7 @@ export class UserController extends BaseController implements IUserController {
           path: '/info',
           method: 'get',
           handler: this.info,
+          middlewares: [new GuardMiddleware(this.configService.get(EnvKeyFor.SECRET))],
         },
       ],
       this.basePath,
@@ -86,8 +88,13 @@ export class UserController extends BaseController implements IUserController {
 
   public info = async ({ user }: Request, res: Response, next: NextFunction): Promise<void> => {
     this.loggerService.log('[user info] should return email if worked');
-    res.status(200).send(`worked: ${user}`);
-    next();
+    const registeredUser = await this.userService.getUser(user);
+    this.loggerService.log(`[user info] ${registeredUser}`);
+    if (registeredUser) {
+      res.status(200).send(`worked`);
+    } else {
+      next(new HTTPError({ status: 400, message: 'Не удалось подтвердить пользователя' }));
+    }
   };
 
   private signJWT(email: string, secret: string): Promise<string> {

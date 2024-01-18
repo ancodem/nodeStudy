@@ -14,7 +14,7 @@ export class UserService implements IUserService {
   constructor(
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-  ) {}
+  ) { }
   async createUser({ name, email, password }: UserRegisterDto): Promise<UserModel | null> {
     const newcommer = new User(name, email);
     const salt = +this.configService.get(EnvKeyFor.SALT);
@@ -34,5 +34,9 @@ export class UserService implements IUserService {
     }
 
     return User.validatePassword(password, existingUser.password);
+  }
+
+  async getUser(email: string): Promise<UserModel | null> {
+    return this.userRepository.find(email);
   }
 }

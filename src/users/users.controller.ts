@@ -44,7 +44,7 @@ export class UserController extends BaseController implements IUserController {
           path: '/info',
           method: 'get',
           handler: this.info,
-          middlewares: [new GuardMiddleware(this.configService.get(EnvKeyFor.SECRET))],
+          middlewares: [new GuardMiddleware()],
         },
       ],
       this.basePath,
@@ -91,7 +91,7 @@ export class UserController extends BaseController implements IUserController {
     const registeredUser = await this.userService.getUser(user);
     this.loggerService.log(`[user info] ${registeredUser}`);
     if (registeredUser) {
-      res.status(200).send(`worked`);
+      res.status(200).send(`worked: ${registeredUser.id} ${registeredUser.email}`);
     } else {
       next(new HTTPError({ status: 400, message: 'Не удалось подтвердить пользователя' }));
     }

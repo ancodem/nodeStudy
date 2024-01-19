@@ -57,7 +57,7 @@ describe('User e2e', () => {
     expect(res.statusCode).not.toBe(200);
   });
 
-  it('errors out if a wrong email format is provided', async () => {
+  it('succeeds to get from user/info with a correct jwjt', async () => {
     const success = await request(application.app).post('/user/login').send({
       name: 'damir',
       email: 'damir@damir.ru',
@@ -70,6 +70,12 @@ describe('User e2e', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.email).toBe('damir@damir.ru');
+  });
+
+  it('failes to get from user/info if jwt is incorrect', async () => {
+    const res = await request(application.app).get('/user/info').set('Authorization', `Bearer 123`);
+
+    expect(res.statusCode).toBe(401);
   });
 });
 

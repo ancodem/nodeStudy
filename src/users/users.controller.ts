@@ -88,12 +88,13 @@ export class UserController extends BaseController implements IUserController {
 
   public info = async ({ user }: Request, res: Response, next: NextFunction): Promise<void> => {
     this.loggerService.log('[user info] should return email if worked');
+
     const registeredUser = await this.userService.getUser(user);
     this.loggerService.log(`[user info] ${registeredUser}`);
     if (registeredUser) {
       res.status(200).send({ id: registeredUser.id, email: registeredUser.email });
     } else {
-      next(new HTTPError({ status: 400, message: 'Не удалось подтвердить пользователя' }));
+      next(new HTTPError({ status: 401, message: 'Доступ запрещен' }));
     }
   };
 

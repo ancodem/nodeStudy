@@ -16,8 +16,7 @@ import { EnvKeyFor } from './constants/config';
 
 @injectable()
 export class App {
-  private app: Express;
-  // @ts-expect-error not using the server yet
+  public app: Express;
   private server: Server;
   private logger: ILogger;
   private port = 8080;
@@ -40,6 +39,10 @@ export class App {
     await this.database.connect();
     this.server = this.app.listen(this.port);
     this.logger.log(`Сервер запущен на http://.localhost:${this.port}`);
+  }
+
+  public disconnect(): void {
+    this.server.close();
   }
 
   public addMiddleware(): void {

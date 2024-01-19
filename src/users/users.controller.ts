@@ -60,7 +60,7 @@ export class UserController extends BaseController implements IUserController {
 
     if (isValid) {
       const jwt = await this.signJWT(body.email, this.configService.get(EnvKeyFor.SECRET));
-      res.status(200).send(`вы успешно залогинились ${jwt}`);
+      res.status(200).send({ jwt });
       this.loggerService.log('[user login] successful');
     } else {
       res.status(401).send(`неверный логин или пароль`);
@@ -91,7 +91,7 @@ export class UserController extends BaseController implements IUserController {
     const registeredUser = await this.userService.getUser(user);
     this.loggerService.log(`[user info] ${registeredUser}`);
     if (registeredUser) {
-      res.status(200).send(`worked: ${registeredUser.id} ${registeredUser.email}`);
+      res.status(200).send({ id: registeredUser.id, email: registeredUser.email });
     } else {
       next(new HTTPError({ status: 400, message: 'Не удалось подтвердить пользователя' }));
     }

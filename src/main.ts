@@ -31,7 +31,7 @@ const appModules = new ContainerModule((bind) => {
   bind<App>(TYPES.Application).to(App);
 });
 
-function bootstrap(): IBootstrapReturn {
+async function bootstrap(): Promise<IBootstrapReturn> {
   const appContainer = new Container();
   appContainer.load(appModules);
   const app = appContainer.get<App>(TYPES.Application);
@@ -40,4 +40,4 @@ function bootstrap(): IBootstrapReturn {
   return { app, appContainer };
 }
 
-export const { app, appContainer } = bootstrap();
+export const boot = bootstrap();
